@@ -1,0 +1,468 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+
+    <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+            <li data-target="#myCarousel" data-slide-to="3"></li>
+        </ol>
+        <div class="carousel-inner" role="listbox">
+            <div class="item active">
+                <img src="~/images/banner1.svg" alt="ASP.NET" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        Learn how to build ASP.NET apps that can run anywhere.
+                        <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525028&clcid=0x409">
+                            Learn More
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="item">
+                <img src="~/images/banner2.svg" alt="Visual Studio" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        There are powerful new features in Visual Studio for building modern web apps.
+                        <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525030&clcid=0x409">
+                            Learn More
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="item">
+                <img src="~/images/banner3.svg" alt="Package Management" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        Bring in libraries from NuGet and npm, and automate tasks using Grunt or Gulp.
+                        <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525029&clcid=0x409">
+                            Learn More
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="item">
+                <img src="~/images/banner4.svg" alt="Microsoft Azure" class="img-responsive" />
+                <div class="carousel-caption" role="option">
+                    <p>
+                        Learn how Microsoft's Azure cloud platform allows you to build, deploy, and scale web apps.
+                        <a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkID=525027&clcid=0x409">
+                            Learn More
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+
+    <div class="row">
+
+        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+        <script runat="server">
+
+            protected void Page_Load(object sender, EventArgs e)
+            {
+
+
+                int totltime = 300,totltimemin;
+
+                if (!Page.IsPostBack)
+                {
+
+                        totltimemin = totltime / 60;
+                        Session["time"] = DateTime.Now.AddSeconds(totltime);
+                        DisplayQuestion();
+                        Label4.Text = "" + totltimemin.ToString() + "" + "minutes";
+                    }
+
+
+
+            }
+            protected void Timer1_Tick(object sender, EventArgs e)
+            {
+                TimeSpan time1 = new TimeSpan();
+                time1 = ((DateTime)Session["time"]) - DateTime.Now;
+                if (time1.Minutes <= 0 && time1.Seconds <= 0)
+                {
+                    Label3.Text = "TimeOut!";
+                    ProcessQuestion();
+                    Examination exam = (Examination)Session["questions"];
+                    if (exam.curpos == exam.SIZE - 1)
+                        Response.Redirect("showresult.aspx");
+                    else
+                    {
+                        exam.curpos++;
+                        Session.Add("questions", exam);
+                        DisplayQuestion();
+                    }
+
+
+
+                }
+                else
+                {
+                    Label3.Text = String.Format("{0} minutes  {1} seconds ", time1.Minutes.ToString(), time1.Seconds.ToString());
+
+                }
+
+            }
+
+            public void DisplayQuestion()
+            {
+                // get data from session object
+                Examination e = (Examination)Session["questions"];
+                // display data
+                lblSubject.Text = e.sname;
+                lblQno.Text = e.curpos + 1 + "/" + e.SIZE;
+                lblCtime.Text = DateTime.Now.ToString();
+                lblStime.Text = e.StartTime.ToString();
+
+                Question q = e.questions[e.curpos];
+                // display details of question
+                question.InnerHtml = q.question;
+                ans1.InnerHtml = q.ans1;
+                ans2.InnerHtml = q.ans2;
+                ans3.InnerHtml = q.ans3;
+                ans4.InnerHtml = q.ans4;
+
+                // reset all radio buttons
+                rbAns1.Checked = false;
+                rbAns2.Checked = false;
+                rbAns3.Checked = false;
+                rbAns4.Checked = false;
+
+                // disable and enable buttons
+                if (e.curpos == 0)
+                {
+                    btnPrev.Enabled = false;
+
+                }
+                else
+                    btnPrev.Enabled = true;
+
+                if (e.curpos == 1)
+                {
+                    Examination exam = (Examination)Session["questions"];
+                    DataList1.DataSource = exam.questions;
+                    DataList1.DataBind();
+
+
+
+                }
+                else if (e.curpos == 2)
+                {
+                    Examination exam = (Examination)Session["questions"];
+                    DataList1.DataSource = exam.questions;
+                    DataList1.DataBind();
+
+                }
+                else if (e.curpos == 3)
+                {
+                    Examination exam = (Examination)Session["questions"];
+                    DataList1.DataSource = exam.questions;
+                    DataList1.DataBind();
+
+                }
+                else if (e.curpos == 4)
+                {
+                    Examination exam = (Examination)Session["questions"];
+                    DataList1.DataSource = exam.questions;
+                    DataList1.DataBind();
+
+
+
+                }
+
+                if (e.curpos == e.SIZE - 1)
+                    btnNext.Text = "Finish";
+                else
+                    btnNext.Text = "Next";
+            }
+
+            public void ProcessQuestion()
+            {
+                Examination exam = (Examination)Session["questions"];
+                Question q = exam.questions[exam.curpos];
+                String answer;
+                // find out the answer and assign it to
+                if (rbAns1.Checked)
+                    answer = "1";
+                else
+                    if (rbAns2.Checked)
+                        answer = "2";
+                    else
+                        if (rbAns3.Checked)
+                            answer = "3";
+                        else
+                            if (rbAns4.Checked)
+                                answer = "4";
+                            else
+                                answer = "0";  // error
+                q.answer = answer;
+                exam.questions[exam.curpos] = q;
+                Session.Add("questions", exam);
+            }
+
+            protected void btnNext_Click(object sender, EventArgs e)
+            {
+                ProcessQuestion();
+                Examination exam = (Examination)Session["questions"];
+                if (exam.curpos == exam.SIZE - 1)
+                    Response.Redirect("showresult.aspx");
+                else
+                {
+                    exam.curpos++;
+                    Session.Add("questions", exam);
+                    DisplayQuestion();
+                }
+            }
+
+            protected void btnPrev_Click(object sender, EventArgs e)
+            {
+                // ProcessQuestion();
+                Examination exam = (Examination)Session["questions"];
+                exam.curpos--;
+                Session.Add("questions", exam);
+                DisplayQuestion();
+            }
+
+            protected void btnCancel_Click(object sender, EventArgs e)
+            {
+                // Examination exam = (Examination)Session["questions"];
+                Session.Remove("questions");
+                //exam = null;
+                Response.Redirect("default.aspx");
+            }
+        </script>
+
+
+        <html xmlns="http://www.w3.org/1999/xhtml">
+        <head id="Head1" runat="server">
+            <title>Examination</title>
+
+            <style type="text/css">
+                fieldset {
+                    margin: 1em 0 0 0;
+                    padding: 0;
+                }
+
+                legend {
+                    margin-left: 1em;
+                    color: #000000;
+                    font-weight: bold;
+                    padding: 0;
+                }
+
+                label {
+                    float: left;
+                    width: 10em;
+                    margin-right: 1em;
+                    text-align: right;
+                }
+
+                fieldset ol {
+                    padding: 1em 1em 0 1em;
+                    list-style: none;
+                }
+
+                fieldset {
+                    float: left;
+                    clear: both;
+                    width: 92%;
+                    margin: 0 0 .5em 0;
+                    padding: 0;
+                    border: 1px solid #BFBAB0;
+                    height: 472px;
+                }
+
+                    fieldset li {
+                        float: left;
+                        clear: left;
+                        width: 50%;
+                        padding-bottom: 1ex;
+                    }
+
+                .text {
+                    color: Gray;
+                }
+
+                .contactTypeRadio label {
+                    width: 50%;
+                }
+
+                .auto-style2 {
+                }
+            </style>
+
+        </head>
+
+        <body>
+            <form id="form1" runat="server">
+                <h2>Examination</h2>
+                <table width="100%" bgcolor="#dddddd">
+                    <tr>
+                        <td>
+                            Subject :
+                            <asp:Label ID="lblSubject" runat="server" Width="154px" Font-Bold="True" Font-Names="Verdana" ForeColor="Red"></asp:Label>
+                        </td>
+                        <td>
+                            Question :
+                            <asp:Label ID="lblQno" runat="server" Font-Bold="True" Font-Names="Verdana" ForeColor="Red"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Started At :
+                            <asp:Label ID="lblStime" runat="server" Font-Bold="True" Font-Names="Verdana" ForeColor="Red"></asp:Label>
+                        </td>
+                        <td style="height: 22px">
+                            Current Time :<asp:Label ID="lblCtime" runat="server" Font-Bold="True" Font-Names="Verdana" ForeColor="Red"></asp:Label>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
+                            </asp:ToolkitScriptManager>
+                            Total Time :<asp:Label ID="Label4" runat="server" Font-Bold="True" Font-Size="Large" ForeColor="#FF3300"></asp:Label>
+                        </td>
+                        <td style="height: 22px">
+                            <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                                <ContentTemplate>
+                                    Time Remaining: <asp:Label ID="Label3" runat="server" Font-Bold="True" Font-Size="Large" ForeColor="#FF3300"></asp:Label>
+                                    <asp:Timer ID="Timer1" runat="server" Interval="1000" ontick="Timer1_Tick">
+                                    </asp:Timer>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
+                        </td>
+
+                    </tr>
+
+                </table>
+
+                <p />
+                <b>Question</b>
+                <br />
+                <b><pre runat="server" id="question" style="background-color:#eeeeee">question</pre> </b>
+                <p></p>
+                <table>
+                    <tr>
+                        <td>
+
+                            <asp:RadioButton ID="rbAns1" runat="server" GroupName="answer" />
+                        </td>
+                        <td style="width: 3px">
+                            <pre runat="server" id="ans1"></pre>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <asp:RadioButton ID="rbAns2" runat="server" GroupName="answer" />
+                        </td>
+                        <td style="width: 3px">
+                            <pre runat="server" id="ans2"></pre>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <asp:RadioButton ID="rbAns3" runat="server" GroupName="answer" />
+                        </td>
+                        <td style="width: 3px">
+                            <pre runat="server" id="ans3"></pre>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <asp:RadioButton ID="rbAns4" runat="server" GroupName="answer" />
+                        </td>
+                        <td style="width: 3px">
+                            <pre runat="server" id="ans4"></pre>
+                        </td>
+                    </tr>
+
+                </table>
+                <br />
+                <asp:Button ID="btnPrev" runat="server" Text="Previous" OnClick="btnPrev_Click" />&nbsp;<asp:Button ID="btnNext"
+                                                                                                                    runat="server" Text="Next" Width="75px" OnClick="btnNext_Click" />
+                <asp:Button ID="btnCancel" runat="server" Text="Cancel Exam" Width="115px" OnClick="btnCancel_Click" />
+
+                <br />
+                <br />
+                <br />
+
+
+
+                <fieldset>
+                    <legend>
+                        Results
+                    </legend>
+                    <asp:Panel ID="Panel1" runat="server">
+                        <asp:DataList ID="DataList1" runat="server"
+                                      CssClass="auto-style2" Width="746px">
+                            <HeaderTemplate>
+
+                                <h2>Review Questions</h2>
+                                <hr size=5 style="color:red" />
+                            </HeaderTemplate>
+                            <ItemTemplate>
+
+                                <pre style="color:Red;background-color:#eeeeee">Answer</pre>
+                                <asp:RadioButton ID="RadioButton1" runat="server" /><asp:Label ID="NationalityLabel" runat="server"
+                                                                                               Text='<%# DataBinder.Eval( Container.DataItem,"YourAnswer")%>' />
+
+
+
+
+
+
+
+
+
+
+                            </ItemTemplate>
+
+
+                            <SeparatorTemplate>
+                                <hr size="2" style="color:Red" />
+                            </SeparatorTemplate>
+
+
+
+                            <FooterTemplate>
+                                <hr size=5 style="color:red" />
+
+                            </FooterTemplate>
+                        </asp:DataList>
+                    </asp:Panel>
+                    <asp:Panel ID="Panel2" runat="server">
+                    </asp:Panel>
+                    <asp:Panel ID="Panel3" runat="server">
+                    </asp:Panel>
+                    <asp:Panel ID="Panel4" runat="server">
+                    </asp:Panel>
+                    <asp:Panel ID="Panel5" runat="server">
+                    </asp:Panel>
+                </fieldset>
+
+
+            </form>
+        </body>
+    </html>
+
+</div>
