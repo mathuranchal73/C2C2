@@ -16,6 +16,7 @@ namespace C2C2
 {
     public class Startup
     {
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -37,6 +38,9 @@ namespace C2C2
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddMvc();
+
+            services.AddDbContext<MvcQuestionContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("MvcQuestionContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

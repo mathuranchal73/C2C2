@@ -65,7 +65,7 @@ namespace C2C2.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return RedirectToLocal(returnUrl ?? Url.Action("Index", "Admin"));
+                    return RedirectToLocal(returnUrl ?? Url.Action("Index", "Questions"));
                 }
                 if (result.RequiresTwoFactor)
                 {

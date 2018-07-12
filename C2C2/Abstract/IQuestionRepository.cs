@@ -12,7 +12,7 @@ namespace C2C2.Abstract
     {
         IEnumerable<Question> Question { get; }
 
-        void SaveProduct(Question question);
+        void SaveQuestion(Question question);
 
         Question DeleteQuestion(int questionId);
     }

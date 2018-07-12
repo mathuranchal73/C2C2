@@ -1,0 +1,60 @@
+﻿@model C2C2.Entities.Question
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Question</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.QuestionText)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.QuestionText)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ans1)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ans1)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ans2)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ans2)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ans3)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ans3)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ans4)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ans4)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.cans)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.cans)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.sid)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.sid)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.QuestionId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -7,11 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 
+
 namespace C2C2.Entities
 {
     public class Question
     {
-        [HiddenInput(DisplayValue = false)]
+        
         public int QuestionId { get; set; }
 
         [DataType(DataType.MultilineText)]
@@ -31,6 +32,9 @@ namespace C2C2.Entities
 
         [Required(ErrorMessage = "Please enter the correct option")]
         public string cans { get; set; }
+
+        [Required(ErrorMessage = "Please enter the correct Subject ID")]
+        public int sid { get; set; }
     }
 }
 
