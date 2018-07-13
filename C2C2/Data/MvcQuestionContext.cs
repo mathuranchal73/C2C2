@@ -15,5 +15,7 @@ namespace C2C2.Models
         }
 
         public DbSet<C2C2.Entities.Question> Question { get; set; }
+        public DbSet<C2C2.Entities.Subject> Subject { get; set; }
+
     }
 }

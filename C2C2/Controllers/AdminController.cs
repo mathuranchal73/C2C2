@@ -19,13 +19,7 @@ namespace C2C2.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly Question _questionManager;
-        private readonly IEmailSender _emailSender;
-        private readonly ILogger _logger;
-        private readonly UrlEncoder _urlEncoder;
-
+       
         private IQuestionRepository repository;
         [Authorize]
         public ActionResult Index()

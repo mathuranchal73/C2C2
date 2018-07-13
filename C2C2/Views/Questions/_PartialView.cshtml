@@ -1,0 +1,3 @@
+﻿@model C2C2.Entities.Subject
+
+@Html.DropDownListFor(model => model.SubjectId, (IEnumerable<SelectListItem>)ViewBag.SubjectList, "--Select--", new { @class = "select" })

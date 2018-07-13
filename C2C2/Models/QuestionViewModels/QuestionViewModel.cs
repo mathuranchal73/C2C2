@@ -12,5 +12,6 @@ namespace C2C2.Models.QuestionViewModels
 
 
         public IEnumerable<Question> Question { get; set; }
+        public IEnumerable<Subject> Subject { get; set; }
     }
 }
