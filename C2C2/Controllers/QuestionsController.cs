@@ -7,17 +7,43 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using C2C2.Entities;
 using C2C2.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using C2C2.Models.AccountViewModels;
+using C2C2.Services;
 
 namespace C2C2.Controllers
+
+
 {
     public class QuestionsController : Controller
     {
+
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IEmailSender _emailSender;
+        private readonly ILogger _logger;
+
         private readonly MvcQuestionContext _context;
 
-        public QuestionsController(MvcQuestionContext context)
+        public QuestionsController(
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            IEmailSender emailSender,
+            ILogger<AccountController> logger, MvcQuestionContext context)
         {
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _emailSender = emailSender;
+            _logger = logger;
             _context = context;
         }
+
+       
 
         // GET: Questions
         public async Task<IActionResult> Index()
@@ -43,11 +69,40 @@ namespace C2C2.Controllers
             return View(question);
         }
 
+        [HttpGet]
         // GET: Questions/Create
         public IActionResult Create()
         {
+            ViewBag.SubjectList = DropDownList<Subject>.LoadItems(GetData(), "SubjectId", "Name");
+           
             return View();
         }
+
+        public ActionResult _PartialView()
+        {
+            return PartialView();
+        }
+        public List<Subject> GetData()
+        {
+            var list = new List<Subject> { new Subject() { SubjectId = 1, SubjectName = "AAA" } };
+            return list;
+        }
+
+        public static class DropDownList<Subject>
+        {
+            public static SelectList LoadItems(IList<Subject> collection, string value, string text)
+            {
+                return new SelectList(collection, value, text);
+            }
+        }
+
+
+        public class MyViewModel
+        {
+            public int SubjectId { get; set; }
+        }
+
+
 
         // POST: Questions/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -64,6 +119,13 @@ namespace C2C2.Controllers
             }
             return View(question);
         }
+
+        public async Task<IActionResult> AddSubject(LoginViewModel model, string returnUrl = null)
+        {
+
+            return RedirectToLocal(returnUrl ?? Url.Action("Index", "Questions"));
+        }
+
 
         // GET: Questions/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -148,6 +210,18 @@ namespace C2C2.Controllers
         private bool QuestionExists(int id)
         {
             return _context.Question.Any(e => e.QuestionId == id);
+        }
+
+        private IActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
         }
     }
 }

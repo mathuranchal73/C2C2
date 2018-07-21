@@ -18,6 +18,7 @@ namespace C2C2.Concrete
     public class EFDbContext: DbContext
     {
         public DbSet<Question> Question { get; set; }
-       
+        public DbSet<Subject> Subject { get; set; }
+
     }
 }

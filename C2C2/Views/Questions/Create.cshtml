@@ -49,7 +49,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="sid" class="control-label"></label>
-                <input asp-for="sid" class="form-control" />
+                <input asp-for="sid" class="form-control" /><div class="form-group">
+                </div>
+                @Html.Partial("_PartialView")
                 <span asp-validation-for="sid" class="text-danger"></span>
             </div>
             <div class="form-group">
